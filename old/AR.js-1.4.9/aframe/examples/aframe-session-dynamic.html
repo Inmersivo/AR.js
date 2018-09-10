@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<!-- include a-frame -->
+<!-- <script src="vendor/aframe.js"></script> -->
+<script src="vendor/aframe-v0.6.1-three-r86.js"></script>
+<!-- include for artoolkit trackingBackend -->
+<script src='../../three.js/vendor/jsartoolkit5/build/artoolkit.min.js'></script>
+<script src='../../three.js/vendor/jsartoolkit5/js/artoolkit.api.js'></script>
+<!-- include for aruco trackingBackend -->
+<script src='../../three.js/vendor/js-aruco/src/svd.js'></script> 
+<script src='../../three.js/vendor/js-aruco/src/posit1.js'></script> 
+<script src='../../three.js/vendor/js-aruco/src/cv.js'></script> 
+<script src='../../three.js/vendor/js-aruco/src/aruco.js'></script> 
+<script src='../../three.js/threex/threex-aruco/threex-arucocontext.js'></script> 
+<script src='../../three.js/threex/threex-aruco/threex-arucodebug.js'></script>
+<!-- include for tango trackingBackend -->
+<script src='../../three.js/vendor/chromium-tango/THREE.WebAR.js'></script>
+<!-- include ar.js -->
+<script src='../../three.js/threex-artoolkitsource.js'></script>
+<script src='../../three.js/threex-artoolkitcontext.js'></script>
+<script src='../../three.js/threex-artoolkitprofile.js'></script>
+<script src='../../three.js/threex-arbasecontrols.js'></script>
+<script src='../../three.js/threex-armarkercontrols.js'></script>
+<script src='../../three.js/threex-armarkerhelper.js'></script>
+<script src='../../three.js/threex-arsmoothedcontrols.js'></script>
+<script src='../../three.js/threex-hittester-plane.js'></script>
+<script src='../../three.js/threex-hittester-tango.js'></script>
+<script src='../../three.js/arjs-utils.js'></script>
+<script src='../../three.js/src/new-api/arjs-session.js'></script>
+<script src='../../three.js/src/new-api/arjs-anchor.js'></script>
+<script src='../../three.js/src/new-api/arjs-hittester.js'></script>
+<script src='../../three.js/src/new-api/arjs-tangovideomesh.js'></script>
+<script src='../../three.js/src/new-api/arjs-tangopointcloud.js'></script>
+<script src='../../three.js/src/markers-area/threex-armultimarkerutils.js'></script>
+<script src='../../three.js/src/markers-area/threex-armultimarkercontrols.js'></script>
+<script src='../../three.js/src/markers-area/threex-armultimarkerlearning.js'></script>
+<!-- include aframe-ar.js -->
+<script src="../src/aframe-ar-session.js"></script>
+
+<script>ARjs.Context.baseURL = '../../three.js/'</script>
+
+<body style='margin : 0px; overflow: hidden; font-family: Monospace; background-color: black;'>
+	<div style='position: fixed; top: 10px; width:inherit; text-align: center; z-index: 1;'>
+		<a href="https://github.com/jeromeetienne/AR.js/" target="_blank">AR.js</a> - tango example for a-frame by <a href='https://twitter.com/jerome_etienne' target='_blank'>@jerome_etienne</a>
+		<br/>
+		<strong>Tracking Method:</strong> <span id='trackingMethod'>unknown</span>
+		- 
+		Switch to : 
+		<a href='#artoolkit' onclick='location.reload()'>artoolkit</a>
+		/ 
+		<a href='#aruco' onclick='location.reload()'>aruco</a>
+		/ 
+		<a href='#area-artoolkit' onclick='location.reload()'>area artoolkit</a>
+		/ 
+		<a href='#area-aruco' onclick='location.reload()'>area aruco</a>
+		/ 
+		<a href='#tango' onclick='location.reload()'>tango</a>
+		/ 
+		<a href='#best' onclick='location.reload()'>best</a>
+		<br/>
+		<a href='javascript:void(0)' id='buttonTangoTogglePointCloud'>toggle-point-cloud</a>
+		<a href='javascript:void(0)' id='buttonToggleMarkerHelpers'>toggle-marker-helper</a>
+		<a href='javascript:void(0)' id='buttonMarkersAreaLearner'>Learn-new-marker-area</a>
+		<a href='javascript:void(0)' id='buttonMarkersAreaReset'>Reset-marker-area</a>
+	</div>
+<script>
+	var trackingMethod = 'best'
+	
+
+	var sceneEl = document.createElement('a-scene')
+	sceneEl.setAttribute('embedded', 'true')
+	sceneEl.setAttribute('arjs', 'trackingMethod: '+trackingMethod)
+
+
+	var parsedTrackingMethod = ARjs.Utils.parseTrackingMethod(trackingMethod)
+	if( parsedTrackingMethod.trackingBackend === 'tango' ){
+		var changeMatrixMode = 'cameraTransformMatrix'
+	}else{
+		var changeMatrixMode = 'modelViewMatrix'		
+	}
+
+	if( changeMatrixMode === 'modelViewMatrix' ){
+		var markerEl = document.createElement('a-marker')
+		sceneEl.appendChild(markerEl)
+
+		var boxEl = document.createElement('a-box')
+		boxEl.setAttribute('position', '0 0.5 0')
+		boxEl.setAttribute('material', 'opacity: 0.5; side:double; color:red;')
+		markerEl.appendChild(boxEl)
+		
+		var cameraEl = document.createElement('a-entity')
+		cameraEl.setAttribute('camera', '')
+		sceneEl.appendChild(cameraEl)
+	}else if( changeMatrixMode === 'cameraTransformMatrix' ){
+		var boxEl = document.createElement('a-box')
+		boxEl.setAttribute('position', '0 0.5 0')
+		boxEl.setAttribute('material', 'opacity: 0.5; side:double; color:red;')
+		sceneEl.appendChild(boxEl)
+		
+		var cameraEl = document.createElement('a-marker-camera')
+		sceneEl.appendChild(cameraEl)
+	}else console.assert(false)
+
+	
+	document.body.appendChild(sceneEl)
+</script>
+</body>
+</html>

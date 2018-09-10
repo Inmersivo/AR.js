@@ -1,0 +1,40 @@
+<head><script src="https://aframe.io/releases/0.7.0/aframe.min.js"></script>
+<script src="https://cdn.rawgit.com/jeromeetienne/AR.js/1.6.0/aframe/build/aframe-ar.js"></script>
+<script src="https://rawgit.com/donmccurdy/aframe-extras/master/dist/aframe-extras.js"></script>
+<script src="https://rawgit.com/mrdoob/three.js/r72/src/extras/animation/Animation.js"></script>
+<script src="https://rawgit.com/mrdoob/three.js/r72/src/extras/animation/AnimationHandler.js"></script>
+<script src="https://rawgit.com/mrdoob/three.js/r72/src/extras/animation/KeyFrameAnimation.js"></script>
+<script>
+AFRAME.registerComponent('collada-animation-mixer', {
+  init: function () {
+    this.el.addEventListener('model-loaded', function(e) {
+      e.detail.model.traverse( function ( child ) {
+        if ( child instanceof THREE.SkinnedMesh ) {
+          var animation = new THREE.Animation( child, child.geometry.animation );
+          animation.play();
+        }
+      });
+    });
+  },
+
+  tick: function (t, dt) {
+    THREE.AnimationHandler.update( dt / 1000 );
+  }
+});
+</script>
+</head>
+<body style='margin : 0px; overflow: hidden;'>
+    <a-scene embedded arjs='trackingMethod: best; debugUIEnabled: false;'>
+      <a-marker type='pattern' url='https://rawgit.com/germanviscuso/AR.js/master/data/data/promarker.patt'>
+      <!--a-marker preset='hiro'-->
+      <a-collada-model 
+        src="https://rawgit.com/germanviscuso/AR.js/master/three.js/examples/models/stormtrooper/stormtrooper.dae"
+        rotation="90 0 0" 
+        collada-animation-mixer 
+        scale="0.4 0.4 0.4" 
+        sound="on: model-loaded; src: url(https://rawgit.com/germanviscuso/AR.js/master/three.js/examples/sounds/song.mp3); autoplay: true; loop: true">
+     </a-collada-model>
+    </a-marker>
+      <a-camera-static/>
+    </a-scene>
+</body>
